@@ -179,3 +179,12 @@ export async function sellability(ctx: Context): Promise<Check> {
     return { rule: "sellability", result: "BLOCK", value: null, detail: `No route to sell $${SELL_TEST_USD} into USDC.`, evidence };
   }
   const impact = Math.round(Number(q.priceImpactPct) * 10000) / 100;
+  const out = Number(q.outAmount) / 1e6;
+  return {
+    rule: "sellability",
+    result: impact > 10 ? "CAUTION" : "PASS",
+    value: { price_impact_pct: impact, usdc_out: out },
+    detail: `$${SELL_TEST_USD} sell routes to ${out.toFixed(2)} USDC with ${impact}% price impact.`,
+    evidence,
+  };
+}
