@@ -163,3 +163,11 @@ export async function sellability(ctx: Context): Promise<Check> {
   }
   const [m, pairs] = await Promise.all([ctx.mintInfo, ctx.pairs]);
   // Price from the deepest pair quoting this token as base; thin pairs can report junk prices.
+  const priced = pairs
+    .filter((p) => p.baseToken.address === ctx.mint && p.priceUsd)
+    .sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0));
+  const price = Number(priced[0]?.priceUsd);
+  if (!price) {
+    return { rule: "sellability", result: "UNKNOWN", value: null, detail: "No USD price available to size a test sell.", evidence };
+  }
+  const amount = BigInt(Math.max(1, Math.floor((SELL_TEST_USD / price) * 10 ** m.decimals)));
