@@ -127,3 +127,11 @@ export async function holderConcentration(ctx: Context): Promise<Check> {
     if (pool) excluded.push(pool);
     return !pool;
   });
+  const top10 = holders.slice(0, 10).reduce((s, a) => s + BigInt(a.amount), 0n);
+  const pct = Number((top10 * 10000n) / total) / 100;
+  const result = pct > 60 ? "BLOCK" : pct > 35 ? "CAUTION" : "PASS";
+  const note = excluded.length
+    ? ` Excluded pool vaults: ${excluded.join(", ")}.`
+    : " No known AMM vaults detected; unrecognized pools/bonding curves may be counted.";
+  return { rule: "holder_concentration", result, value: pct, detail: `Top-10 holders own ${pct}% of supply.${note}`, evidence };
+}
