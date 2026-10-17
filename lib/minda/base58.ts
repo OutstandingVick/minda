@@ -22,3 +22,7 @@ export function base58Decode(s: string): Uint8Array | null {
   }
   return Uint8Array.from(bytes.reverse());
 }
+
+export function isPubkey(s: string): boolean {
+  return base58Decode(s)?.length === 32;
+}
