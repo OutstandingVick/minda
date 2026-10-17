@@ -48,3 +48,5 @@ export interface Context {
   mintInfo: Promise<ParsedMint>;
   pairs: Promise<DexPair[]>;
 }
+
+const solscan = (mint: string) => `https://solscan.io/token/${mint}`;
