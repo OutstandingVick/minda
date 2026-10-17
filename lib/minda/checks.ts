@@ -207,3 +207,14 @@ export async function runChecks(mint: string, signal?: AbortSignal): Promise<{ c
     s.status === "fulfilled"
       ? s.value
       : {
+          rule: CHECKS[i][0],
+          result: "UNKNOWN",
+          value: null,
+          detail: `Check failed: ${s.reason instanceof Error ? s.reason.message : String(s.reason)}`,
+          evidence: solscan(mint),
+        },
+  );
+  const pairs = await ctx.pairs.catch(() => []);
+  const symbol = pairs.find((p) => p.baseToken.address === mint)?.baseToken.symbol ?? null;
+  return { checks, symbol };
+}
