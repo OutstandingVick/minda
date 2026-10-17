@@ -175,3 +175,7 @@ export async function sellability(ctx: Context): Promise<Check> {
   const res = await fetch(url, { signal: ctx.signal, cache: "no-store" });
   const q = await res.json().catch(() => ({}));
   if (!res.ok || !q.outAmount) {
+    if (res.status >= 500 || res.status === 429) throw new Error(`Jupiter HTTP ${res.status}`);
+    return { rule: "sellability", result: "BLOCK", value: null, detail: `No route to sell $${SELL_TEST_USD} into USDC.`, evidence };
+  }
+  const impact = Math.round(Number(q.priceImpactPct) * 10000) / 100;
