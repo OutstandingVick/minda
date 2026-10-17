@@ -103,3 +103,11 @@ export async function freezeAuthority(ctx: Context): Promise<Check> {
   }
   return { rule: "freeze_authority", result: "BLOCK", value: m.freezeAuthority, detail: "Freeze authority active: your tokens can be frozen.", evidence: solscan(ctx.mint) };
 }
+
+export async function holderConcentration(ctx: Context): Promise<Check> {
+  const [largest, supply] = await Promise.all([
+    rpc<{ value: { address: string; amount: string }[] }>("getTokenLargestAccounts", [ctx.mint], ctx.signal),
+    rpc<{ value: { amount: string } }>("getTokenSupply", [ctx.mint], ctx.signal),
+  ]);
+  const total = BigInt(supply.value.amount);
+  const evidence = `${solscan(ctx.mint)}#holders`;
