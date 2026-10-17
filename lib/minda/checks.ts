@@ -188,3 +188,11 @@ export async function sellability(ctx: Context): Promise<Check> {
     evidence,
   };
 }
+
+const CHECKS = [
+  ["mint_authority", mintAuthority],
+  ["freeze_authority", freezeAuthority],
+  ["holder_concentration", holderConcentration],
+  ["liquidity", liquidity],
+  ["sellability", sellability],
+] as const;
