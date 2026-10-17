@@ -16,3 +16,11 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
   });
   return Promise.race([p, t]).finally(() => clearTimeout(timer));
 }
+
+interface ParsedMint {
+  program: string;
+  decimals: number;
+  mintAuthority: string | null;
+  freezeAuthority: string | null;
+  supply: string;
+}
