@@ -7,3 +7,11 @@ export async function rpc<T>(method: string, params: unknown[], signal?: AbortSi
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: nextId++, method, params }),
+    signal,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`RPC ${method} HTTP ${res.status}`);
+  const json = await res.json();
+  if (json.error) throw new Error(`RPC ${method}: ${json.error.message}`);
+  return json.result as T;
+}
