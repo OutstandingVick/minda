@@ -97,3 +97,9 @@ export async function freezeAuthority(ctx: Context): Promise<Check> {
   const allow = STABLECOIN_ALLOWLIST[ctx.mint];
   if (!m.freezeAuthority) {
     return { rule: "freeze_authority", result: "PASS", value: null, detail: "Freeze authority revoked.", evidence: solscan(ctx.mint) };
+  }
+  if (allow) {
+    return { rule: "freeze_authority", result: "PASS", value: m.freezeAuthority, detail: `Freeze authority active, but ${allow} is an allowlisted regulated stablecoin (exception).`, evidence: solscan(ctx.mint) };
+  }
+  return { rule: "freeze_authority", result: "BLOCK", value: m.freezeAuthority, detail: "Freeze authority active: your tokens can be frozen.", evidence: solscan(ctx.mint) };
+}
