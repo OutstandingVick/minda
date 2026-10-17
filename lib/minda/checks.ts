@@ -78,3 +78,9 @@ export async function fetchPairs(mint: string, signal?: AbortSignal): Promise<De
       (TRUSTED_QUOTES.has(p.quoteToken?.address) || TRUSTED_QUOTES.has(p.baseToken.address)),
   );
 }
+
+export async function mintAuthority(ctx: Context): Promise<Check> {
+  const m = await ctx.mintInfo;
+  const std = m.program === TOKEN_2022_PROGRAM ? "Token-2022" : "SPL Token";
+  const allow = STABLECOIN_ALLOWLIST[ctx.mint];
+  if (!m.mintAuthority) {
