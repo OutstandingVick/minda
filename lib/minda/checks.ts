@@ -91,3 +91,9 @@ export async function mintAuthority(ctx: Context): Promise<Check> {
   }
   return { rule: "mint_authority", result: "BLOCK", value: m.mintAuthority, detail: `Mint authority active: supply can be inflated (${std}).`, evidence: solscan(ctx.mint) };
 }
+
+export async function freezeAuthority(ctx: Context): Promise<Check> {
+  const m = await ctx.mintInfo;
+  const allow = STABLECOIN_ALLOWLIST[ctx.mint];
+  if (!m.freezeAuthority) {
+    return { rule: "freeze_authority", result: "PASS", value: null, detail: "Freeze authority revoked.", evidence: solscan(ctx.mint) };
