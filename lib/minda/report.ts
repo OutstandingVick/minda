@@ -20,3 +20,10 @@ export function canonicalJson(v: unknown): string {
   const keys = Object.keys(obj).filter((k) => obj[k] !== undefined).sort();
   return `{${keys.map((k) => `${JSON.stringify(k)}:${canonicalJson(obj[k])}`).join(",")}}`;
 }
+
+export function buildReport(mint: string, symbol: string | null, checks: Check[], checkedAt = new Date()): Report {
+  const { verdict, score } = computeVerdict(checks);
+  const body = { verdict, score, mint, symbol, checks, checked_at: checkedAt.toISOString() };
+  const report_hash = "sha256:" + createHash("sha256").update(canonicalJson(body)).digest("hex");
+  return { ...body, report_hash };
+}
