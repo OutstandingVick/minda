@@ -41,3 +41,10 @@ const TRUSTED_QUOTES = new Set([
   USDC_MINT,
   "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
 ]);
+
+export interface Context {
+  mint: string;
+  signal?: AbortSignal;
+  mintInfo: Promise<ParsedMint>;
+  pairs: Promise<DexPair[]>;
+}
