@@ -119,3 +119,11 @@ export async function holderConcentration(ctx: Context): Promise<Check> {
     "getMultipleAccounts",
     [accounts.map((a) => a.address), { encoding: "jsonParsed" }],
     ctx.signal,
+  );
+  const excluded: string[] = [];
+  const holders = accounts.filter((a, i) => {
+    const owner = owners.value[i]?.data?.parsed?.info?.owner;
+    const pool = owner && KNOWN_POOL_OWNERS[owner];
+    if (pool) excluded.push(pool);
+    return !pool;
+  });
