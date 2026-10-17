@@ -16,3 +16,6 @@ export const KNOWN_POOL_OWNERS: Record<string, string> = {
 };
 
 export const TOKEN_2022_PROGRAM = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb";
+
+export const CHECK_TIMEOUT_MS = 8000;
+export const SELL_TEST_USD = 100;
