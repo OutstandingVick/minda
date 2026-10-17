@@ -58,3 +58,11 @@ export async function fetchMint(mint: string, signal?: AbortSignal): Promise<Par
   const parsed = acct.data?.parsed;
   if (parsed?.type !== "mint") throw new Error("account is not a token mint");
   const info = parsed.info;
+  return {
+    program: acct.owner,
+    decimals: info.decimals,
+    mintAuthority: info.mintAuthority ?? null,
+    freezeAuthority: info.freezeAuthority ?? null,
+    supply: info.supply,
+  };
+}
