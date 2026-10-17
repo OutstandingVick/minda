@@ -135,3 +135,8 @@ export async function holderConcentration(ctx: Context): Promise<Check> {
     : " No known AMM vaults detected; unrecognized pools/bonding curves may be counted.";
   return { rule: "holder_concentration", result, value: pct, detail: `Top-10 holders own ${pct}% of supply.${note}`, evidence };
 }
+
+export async function liquidity(ctx: Context): Promise<Check> {
+  const pairs = await ctx.pairs;
+  if (!pairs.length) {
+    return { rule: "liquidity", result: "BLOCK", value: { usd: 0, age_hours: null }, detail: "No Solana DEX pairs against SOL/USDC/USDT found.", evidence: `https://dexscreener.com/solana/${ctx.mint}` };
