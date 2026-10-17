@@ -15,3 +15,9 @@ export async function rpc<T>(method: string, params: unknown[], signal?: AbortSi
   if (json.error) throw new Error(`RPC ${method}: ${json.error.message}`);
   return json.result as T;
 }
+
+export async function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
+  const res = await fetch(url, { signal, cache: "no-store" });
+  if (!res.ok) throw new Error(`GET ${new URL(url).host} HTTP ${res.status}`);
+  return (await res.json()) as T;
+}
