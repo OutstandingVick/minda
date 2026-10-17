@@ -155,3 +155,11 @@ export async function liquidity(ctx: Context): Promise<Check> {
   }
   return { rule: "liquidity", result, value: { usd, age_hours: ageHours }, detail: notes.join(" "), evidence: top.url };
 }
+
+export async function sellability(ctx: Context): Promise<Check> {
+  const evidence = `https://jup.ag/swap/${ctx.mint}-${USDC_MINT}`;
+  if (ctx.mint === USDC_MINT) {
+    return { rule: "sellability", result: "PASS", value: null, detail: "Token is USDC (quote currency).", evidence };
+  }
+  const [m, pairs] = await Promise.all([ctx.mintInfo, ctx.pairs]);
+  // Price from the deepest pair quoting this token as base; thin pairs can report junk prices.
