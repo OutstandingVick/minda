@@ -34,3 +34,10 @@ interface DexPair {
   baseToken: { address: string; symbol: string };
   quoteToken: { address: string };
 }
+
+// Only pairs quoted in these count: spoofed pairs against junk quote tokens report fake liquidity.
+const TRUSTED_QUOTES = new Set([
+  "So11111111111111111111111111111111111111112",
+  USDC_MINT,
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+]);
