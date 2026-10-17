@@ -145,3 +145,13 @@ export async function liquidity(ctx: Context): Promise<Check> {
   const top = [...pairs].sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0))[0];
   const created = pairs.map((p) => p.pairCreatedAt).filter((t): t is number => !!t);
   const ageHours = created.length ? Math.floor((Date.now() - Math.min(...created)) / 3_600_000) : null;
+  const notes: string[] = [`$${usd.toLocaleString("en-US")} liquidity across ${pairs.length} SOL/USDC/USDT pair(s).`];
+  let result: Check["result"] = usd < 10_000 ? "BLOCK" : usd < 50_000 ? "CAUTION" : "PASS";
+  if (ageHours !== null && ageHours < 24) {
+    notes.push(`Token is ${ageHours}h old (<24h).`);
+    if (result === "PASS") result = "CAUTION";
+  } else if (ageHours !== null) {
+    notes.push(`Oldest pair is ${Math.floor(ageHours / 24)}d old.`);
+  }
+  return { rule: "liquidity", result, value: { usd, age_hours: ageHours }, detail: notes.join(" "), evidence: top.url };
+}
