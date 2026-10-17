@@ -15,3 +15,10 @@ async function main() {
       const t0 = Date.now();
       const r = await checkToken(mint, AbortSignal.timeout(10_000));
       const ms = Date.now() - t0;
+      const flags = r.checks.map((c) => `${c.rule}=${c.result} (${c.detail})`).join("\n  ");
+      return { name, symbol: r.symbol ?? "?", verdict: r.verdict, score: r.score, expect, ms, under10s: ms < 10_000, flags };
+    }),
+  );
+  console.table(rows.map(({ flags, ...r }) => r));
+  for (const r of rows) console.log(`${r.name}:\n  ${r.flags}`);
+}
