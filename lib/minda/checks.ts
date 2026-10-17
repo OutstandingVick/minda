@@ -50,3 +50,11 @@ export interface Context {
 }
 
 const solscan = (mint: string) => `https://solscan.io/token/${mint}`;
+
+export async function fetchMint(mint: string, signal?: AbortSignal): Promise<ParsedMint> {
+  const res = await rpc<{ value: any }>("getAccountInfo", [mint, { encoding: "jsonParsed" }], signal);
+  const acct = res.value;
+  if (!acct) throw new Error("mint account not found");
+  const parsed = acct.data?.parsed;
+  if (parsed?.type !== "mint") throw new Error("account is not a token mint");
+  const info = parsed.info;
