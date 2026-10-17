@@ -1,6 +1,19 @@
 let nextId = 1;
 
+const TRANSIENT = /overloaded|try again|HTTP (429|5\d\d)/i;
+
+// Retries once after a short pause when the RPC reports a transient failure.
 export async function rpc<T>(method: string, params: unknown[], signal?: AbortSignal): Promise<T> {
+  try {
+    return await rpcOnce<T>(method, params, signal);
+  } catch (e) {
+    if (signal?.aborted || !(e instanceof Error) || !TRANSIENT.test(e.message)) throw e;
+    await new Promise((r) => setTimeout(r, 400));
+    return rpcOnce<T>(method, params, signal);
+  }
+}
+
+async function rpcOnce<T>(method: string, params: unknown[], signal?: AbortSignal): Promise<T> {
   const url = process.env.HELIUS_RPC_URL;
   if (!url) throw new Error("HELIUS_RPC_URL not set");
   const res = await fetch(url, {
