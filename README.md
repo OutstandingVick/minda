@@ -12,3 +12,5 @@ Pre-trade Solana token safety check. Runs five on-chain/market checks in paralle
 
 Verdict: any BLOCK → BLOCK; ≥2 CAUTION (UNKNOWN counts as CAUTION) → CAUTION; else PASS.
 Score = 100 − 40·BLOCK − 15·CAUTION, floored at 0.
+
+## Run
