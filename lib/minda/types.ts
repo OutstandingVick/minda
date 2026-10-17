@@ -7,3 +7,5 @@ export interface Check {
   detail: string;
   evidence: string;
 }
+
+export type Verdict = "PASS" | "CAUTION" | "BLOCK";
