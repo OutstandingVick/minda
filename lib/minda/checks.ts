@@ -196,3 +196,14 @@ const CHECKS = [
   ["liquidity", liquidity],
   ["sellability", sellability],
 ] as const;
+
+export async function runChecks(mint: string, signal?: AbortSignal): Promise<{ checks: Check[]; symbol: string | null }> {
+  const ctx: Context = { mint, signal, mintInfo: fetchMint(mint, signal), pairs: fetchPairs(mint, signal) };
+  // Avoid unhandled rejections if no check awaits a failed shared fetch.
+  ctx.mintInfo.catch(() => {});
+  ctx.pairs.catch(() => {});
+  const settled = await Promise.allSettled(CHECKS.map(([, fn]) => withTimeout(fn(ctx), CHECK_TIMEOUT_MS)));
+  const checks = settled.map((s, i): Check =>
+    s.status === "fulfilled"
+      ? s.value
+      : {
