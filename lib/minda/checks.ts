@@ -171,3 +171,7 @@ export async function sellability(ctx: Context): Promise<Check> {
     return { rule: "sellability", result: "UNKNOWN", value: null, detail: "No USD price available to size a test sell.", evidence };
   }
   const amount = BigInt(Math.max(1, Math.floor((SELL_TEST_USD / price) * 10 ** m.decimals)));
+  const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${ctx.mint}&outputMint=${USDC_MINT}&amount=${amount}&slippageBps=500`;
+  const res = await fetch(url, { signal: ctx.signal, cache: "no-store" });
+  const q = await res.json().catch(() => ({}));
+  if (!res.ok || !q.outAmount) {
