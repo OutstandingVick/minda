@@ -14,3 +14,10 @@ Verdict: any BLOCK → BLOCK; ≥2 CAUTION (UNKNOWN counts as CAUTION) → CAUTI
 Score = 100 − 40·BLOCK − 15·CAUTION, floored at 0.
 
 ## Run
+
+```bash
+cp .env.example .env.local   # set HELIUS_RPC_URL
+npm install
+npm run dev                  # GET /api/check/free?mint=<mint>
+npm run test:tokens          # verdict table for JUP, USDC, BONK + 2 pump.fun tokens
+```
