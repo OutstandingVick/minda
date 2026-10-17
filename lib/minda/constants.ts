@@ -14,3 +14,5 @@ export const KNOWN_POOL_OWNERS: Record<string, string> = {
   "4cSM2e6rvbGQUFiJbqytoVMi5GgghSMr8LwVrT9VPSPo": "Meteora DAMM v2",
   HLnpSz9h2S4hiLQ43rnSD9XkcUThA7B8hQMKmDaiTLcC: "Meteora DAMM v1",
 };
+
+export const TOKEN_2022_PROGRAM = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb";
