@@ -2,3 +2,6 @@
 import { NextResponse } from "next/server";
 import { isPubkey } from "@/lib/minda/base58";
 import { checkToken } from "@/lib/minda/report";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 15;
