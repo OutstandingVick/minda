@@ -140,3 +140,8 @@ export async function liquidity(ctx: Context): Promise<Check> {
   const pairs = await ctx.pairs;
   if (!pairs.length) {
     return { rule: "liquidity", result: "BLOCK", value: { usd: 0, age_hours: null }, detail: "No Solana DEX pairs against SOL/USDC/USDT found.", evidence: `https://dexscreener.com/solana/${ctx.mint}` };
+  }
+  const usd = Math.round(pairs.reduce((s, p) => s + (p.liquidity?.usd ?? 0), 0));
+  const top = [...pairs].sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0))[0];
+  const created = pairs.map((p) => p.pairCreatedAt).filter((t): t is number => !!t);
+  const ageHours = created.length ? Math.floor((Date.now() - Math.min(...created)) / 3_600_000) : null;
