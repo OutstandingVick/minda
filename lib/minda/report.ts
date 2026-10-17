@@ -27,3 +27,8 @@ export function buildReport(mint: string, symbol: string | null, checks: Check[]
   const report_hash = "sha256:" + createHash("sha256").update(canonicalJson(body)).digest("hex");
   return { ...body, report_hash };
 }
+
+export async function checkToken(mint: string, signal?: AbortSignal): Promise<Report> {
+  const { checks, symbol } = await runChecks(mint, signal);
+  return buildReport(mint, symbol, checks);
+}
