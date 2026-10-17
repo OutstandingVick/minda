@@ -18,3 +18,15 @@ export async function GET(req: Request) {
   const timeout = new Promise<never>((_, reject) => {
     timer = setTimeout(() => {
       controller.abort();
+      reject(new Error("timeout"));
+    }, TIMEOUT_MS);
+  });
+  try {
+    const report = await Promise.race([checkToken(mint, controller.signal), timeout]);
+    return NextResponse.json(report);
+  } catch {
+    return NextResponse.json({ error: "check timed out" }, { status: 504 });
+  } finally {
+    clearTimeout(timer);
+  }
+}
