@@ -84,3 +84,10 @@ export async function mintAuthority(ctx: Context): Promise<Check> {
   const std = m.program === TOKEN_2022_PROGRAM ? "Token-2022" : "SPL Token";
   const allow = STABLECOIN_ALLOWLIST[ctx.mint];
   if (!m.mintAuthority) {
+    return { rule: "mint_authority", result: "PASS", value: null, detail: `Mint authority revoked (${std}).`, evidence: solscan(ctx.mint) };
+  }
+  if (allow) {
+    return { rule: "mint_authority", result: "PASS", value: m.mintAuthority, detail: `Mint authority active, but ${allow} is an allowlisted regulated stablecoin (${std}).`, evidence: solscan(ctx.mint) };
+  }
+  return { rule: "mint_authority", result: "BLOCK", value: m.mintAuthority, detail: `Mint authority active: supply can be inflated (${std}).`, evidence: solscan(ctx.mint) };
+}
