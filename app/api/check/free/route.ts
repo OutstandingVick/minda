@@ -5,3 +5,5 @@ import { checkToken } from "@/lib/minda/report";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 15;
+
+const TIMEOUT_MS = 10_000;
