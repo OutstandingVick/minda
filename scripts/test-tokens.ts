@@ -22,3 +22,8 @@ async function main() {
   console.table(rows.map(({ flags, ...r }) => r));
   for (const r of rows) console.log(`${r.name}:\n  ${r.flags}`);
 }
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
