@@ -24,3 +24,13 @@ interface ParsedMint {
   freezeAuthority: string | null;
   supply: string;
 }
+
+interface DexPair {
+  chainId: string;
+  url: string;
+  priceUsd?: string;
+  liquidity?: { usd?: number };
+  pairCreatedAt?: number;
+  baseToken: { address: string; symbol: string };
+  quoteToken: { address: string };
+}
