@@ -66,3 +66,15 @@ export async function fetchMint(mint: string, signal?: AbortSignal): Promise<Par
     supply: info.supply,
   };
 }
+
+export async function fetchPairs(mint: string, signal?: AbortSignal): Promise<DexPair[]> {
+  const data = await getJson<{ pairs: DexPair[] | null }>(
+    `https://api.dexscreener.com/latest/dex/tokens/${mint}`,
+    signal,
+  );
+  return (data.pairs ?? []).filter(
+    (p) =>
+      p.chainId === "solana" &&
+      (TRUSTED_QUOTES.has(p.quoteToken?.address) || TRUSTED_QUOTES.has(p.baseToken.address)),
+  );
+}
