@@ -111,3 +111,11 @@ export async function holderConcentration(ctx: Context): Promise<Check> {
   ]);
   const total = BigInt(supply.value.amount);
   const evidence = `${solscan(ctx.mint)}#holders`;
+  if (total === 0n) {
+    return { rule: "holder_concentration", result: "UNKNOWN", value: null, detail: "Supply is zero.", evidence };
+  }
+  const accounts = largest.value;
+  const owners = await rpc<{ value: any[] }>(
+    "getMultipleAccounts",
+    [accounts.map((a) => a.address), { encoding: "jsonParsed" }],
+    ctx.signal,
